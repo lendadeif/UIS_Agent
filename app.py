@@ -1,6 +1,6 @@
 import streamlit as st
 from connection import DatabaseManager
-from my_agent import SmartBusinessAssistant
+from simple import SmartBusinessAssistant
 import openai
 import os
 db=DatabaseManager.get_db()

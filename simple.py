@@ -351,11 +351,11 @@ class SmartBusinessAssistant:
             Make sure to validate column names before executing."""
         )
         
-        # Performance Tool - SIMPLIFIED
+        
         def perf_tool_func(input_data: str = "") -> str:
             """Analyze franchise performance"""
             try:
-                # Simple parsing
+                
                 input_data = input_data.strip().strip('"\'')
                 
                 if not input_data:
@@ -373,7 +373,7 @@ class SmartBusinessAssistant:
                 if "error" in result:
                     return f"Error: {result['error']}"
                 
-                # Simple formatting
+                
                 rows = result.get("performance_data", {}).get("rows", [])
                 if not rows:
                     return "No performance data found"
