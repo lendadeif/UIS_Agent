@@ -19,9 +19,10 @@ class DatabaseManager:
         "tab_item",
         "tab_Site"
     ]
+    allowed_tables=["vw_Full_Sales_Analysis"]
 
     @staticmethod
-    def get_db():
+    def get_db(allowed_tables=None) -> SQLDatabase:
         server = "18.224.175.116"
         database = "DB_A45ECB_ResErpDBHighTest"
         username = "AI"
@@ -46,7 +47,8 @@ class DatabaseManager:
                 engine,
                 include_tables=DatabaseManager.allowed_tables,
                 sample_rows_in_table_info=2,
-                view_support=False
+                view_support=True
             )
 
         return DatabaseManager._db_instance
+
