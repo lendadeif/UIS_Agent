@@ -182,7 +182,7 @@ class SmartBusinessAssistant:
         self.llm = ChatOpenAI(
             model="gpt-3.5-turbo",
             # model="gpt-4o",
-            api_key=self.config.openai_api_key or st.secrets.get("OPENAI_API_KEY"),
+            api_key=st.secrets.get("API_KEY_OPENAI"),
             temperature=0.1,
             max_retries=2
         )
@@ -901,13 +901,14 @@ Question: {input}
             logger.error(f"smart_run failed: {e}", exc_info=True)
             return "I encountered an error. Please try again."
 
-db = DatabaseManager.get_db()
-agent = SmartBusinessAssistant(db)
-def test():
-    query="what branches are available"
-    response = agent.smart_run(query)
-    print("Query:",query)
-    print("Response:",response)
+# db = DatabaseManager.get_db()
+# agent = SmartBusinessAssistant(db)
+# def test():
+#     query="what branches are available"
+#     response = agent.smart_run(query)
+#     print("Query:",query)
+#     print("Response:",response)
 
-if __name__ == "__main__":
-    test()
+# if __name__ == "__main__":
+#     # test()
+#     print(st.secrets.get("API_KEY_OPENAI"))
