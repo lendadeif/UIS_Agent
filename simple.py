@@ -25,8 +25,8 @@ db=DatabaseManager.get_db()
 class Config:
     """Configuration management"""
     def __init__(self):
-        self.openai_api_key = self._get_required_env("API_KEY_OPENAI")
-        self.active_company_id = int(os.getenv("ACTIVE_COMPANY_ID", 74))
+        self.openai_api_key = st.secrets.get("API_KEY_OPENAI")
+        self.active_company_id = int(st.secrets.get("ACTIVE_COMPANY_ID", 74))
         
     @staticmethod
     def _get_required_env(key: str) -> str:
