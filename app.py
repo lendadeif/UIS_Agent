@@ -1,10 +1,10 @@
 import streamlit as st
 from connection import DatabaseManager
 from my_agent import SmartBusinessAssistant
-
+import openai
+import os
 db=DatabaseManager.get_db()
 agent = SmartBusinessAssistant(db)
-
 
 st.title("Smart Business Assistant")
 user_input = st.text_area("Enter your business query here:")

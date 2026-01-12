@@ -50,4 +50,3 @@ class DatabaseManager:
             )
 
         return DatabaseManager._db_instance
-    

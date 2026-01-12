@@ -30,20 +30,89 @@ SIMILARITY_THRESHOLD = 75
 MAX_CONTEXT_LENGTH = 4000
 db=DatabaseManager.get_db()
 
+# class Config:
+#     """Configuration management"""
+#     def __init__(self):
+#         self.openai_api_key = self._get_required_env("API_KEY_OPENAI")
+#         self.active_company_id = int(os.getenv("ACTIVE_COMPANY_ID", 74))
+        
+#     @staticmethod
+#     def _get_required_env(key: str) -> str:
+#         value = os.getenv(key)
+#         if not value:
+#             raise ValueError(f"Required environment variable {key} not found")
+#         return value
+
+import os
+import streamlit as st
+from typing import Optional
+
 class Config:
-    """Configuration management"""
+    """Configuration management with Streamlit Cloud support"""
     def __init__(self):
-        self.openai_api_key = self._get_required_env("API_KEY_OPENAI")
-        self.active_company_id = int(os.getenv("ACTIVE_COMPANY_ID", 74))
+        # Try multiple sources for API key
+        self.openai_api_key = self._get_api_key()
+        self.active_company_id = int(self._get_env("ACTIVE_COMPANY_ID", "74"))
         
     @staticmethod
-    def _get_required_env(key: str) -> str:
+    def _get_api_key() -> str:
+        """Get API key from multiple possible sources"""
+        # 1. Try Streamlit Secrets (for deployment)
+        try:
+            import streamlit as st
+            if hasattr(st, 'secrets'):
+                # Try different possible key names in secrets
+                api_key = (
+                    st.secrets.get("API_KEY_OPENAI") or
+                    st.secrets.get("OPENAI_API_KEY") or
+                    st.secrets.get("openai_api_key")
+                )
+                if api_key:
+                    return api_key
+        except:
+            pass
+        
+        # 2. Try environment variables (for local development)
+        api_key = (
+            os.getenv("API_KEY_OPENAI") or
+            os.getenv("OPENAI_API_KEY") or
+            os.getenv("openai_api_key")
+        )
+        
+        if api_key:
+            return api_key
+        
+        # 3. If nothing found, raise error
+        raise ValueError(
+            "OpenAI API key not found! "
+            "Please add it to Streamlit Secrets or environment variables.\n"
+            "For Streamlit Cloud: Go to Settings → Secrets and add:\n"
+            "API_KEY_OPENAI = 'your-key-here'\n"
+            "For local development: Set environment variable API_KEY_OPENAI"
+        )
+    
+    @staticmethod
+    def _get_env(key: str, default: Optional[str] = None) -> str:
+        """Get environment variable from multiple sources"""
+        # Try Streamlit Secrets first
+        try:
+            import streamlit as st
+            if hasattr(st, 'secrets'):
+                value = st.secrets.get(key)
+                if value:
+                    return value
+        except:
+            pass
+        
+        # Try environment variables
         value = os.getenv(key)
-        if not value:
-            raise ValueError(f"Required environment variable {key} not found")
-        return value
-
-
+        if value:
+            return value
+        
+        # Return default or raise error
+        if default is not None:
+            return default
+        raise ValueError(f"Required variable {key} not found")
 class ConversationContext:
     """
     Intelligent context tracking
